@@ -151,7 +151,7 @@ while (recensione.matches(".*\\d.*")) {
             bw.write(String.format(java.util.Locale.US, "%s,%s,%d,%d,%d,%d,%d,%.1f,%s,%s,%s,%s,%s,%s\n",
                     userid, titoloLibro, stile, contenuto, gradevolezza, originalita, edizione, mediaValutazioni, recensione,
                     commentoStile, commentoContenuto, commentoGradevolezza, commentoOriginalita, commentoEdizione));
-            System.out.println("\n"+VERDE+V+"Valutazione aggiunta con successo per il libro: " + titoloLibro+RESET);
+            System.out.println("\n" + VERDE + V + "Valutazione aggiunta con successo per il libro: " + titoloLibro + RESET);
 
         } catch (IOException e) {
             System.err.println("Errore durante la scrittura nel file: " + e.getMessage());
