@@ -1,6 +1,3 @@
-
-
-
 /**
  * Classe per la gestione delle librerie personali e dei relativi libri.
  * 
@@ -531,38 +528,64 @@ public class Libreria {
          * @param datiLibro L'array di stringhe contenente i dati del libro.
          */
         public static void stampaDettagliLibro(String[] datiLibro) {
-            try {
-                // Imposta la codifica dell'output della console su UTF-8
-                System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8.name()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             if (datiLibro == null) {
-                System.out.println("\n"+ROSSO+X+"Nessun libro trovato."+RESET);
+                System.out.println("\n" + ROSSO + X + "Nessun libro trovato." + RESET);
                 return;
             }
         
-            // Assegna valori predefiniti per i campi mancanti
-            String[] campiLibro = new String[13];
-            for (int i = 0; i < campiLibro.length; i++) {
-                campiLibro[i] = (i < datiLibro.length) ? datiLibro[i] : "0";
-            }
+            System.out.println(VERDE + "\nTitolo: " + datiLibro[0]);
+            System.out.println("Autori: " + datiLibro[1]);
+            System.out.println("Categoria: " + datiLibro[2]);
+            System.out.println("Editore: " + datiLibro[3]);
+            System.out.println("Anno di pubblicazione: " + datiLibro[4]);
+            System.out.println("Media voti stile: " + datiLibro[5]);
+            System.out.println("Commenti stile: " + getCommentiPerCaratteristica(datiLibro[0], "stile"));
+            System.out.println("Media voti contenuto: " + datiLibro[6]);
+            System.out.println("Commenti contenuto: " + getCommentiPerCaratteristica(datiLibro[0], "contenuto"));
+            System.out.println("Media voti gradevolezza: " + datiLibro[7]);
+            System.out.println("Commenti gradevolezza: " + getCommentiPerCaratteristica(datiLibro[0], "gradevolezza"));
+            System.out.println("Media voti originalità: " + datiLibro[8]);
+            System.out.println("Commenti originalità: " + getCommentiPerCaratteristica(datiLibro[0], "originalita"));
+            System.out.println("Media voti edizione: " + datiLibro[9]);
+            System.out.println("Commenti edizione: " + getCommentiPerCaratteristica(datiLibro[0], "edizione"));
+            System.out.println("Media totale voti: " + datiLibro[10]);
+            System.out.println("Numero di utenti che hanno votato: " + datiLibro[11]);
+            System.out.println("Libri consigliati: " + datiLibro[12]);
+            System.out.println("\n" + RESET);
+        }
         
-            // Stampa i dettagli del libro
-            System.out.println(VERDE+"\nTitolo: " + campiLibro[0]);
-            System.out.println("Autori: " + campiLibro[1]);
-            System.out.println("Categoria: " + campiLibro[2]);
-            System.out.println("Editore: " + campiLibro[3]);
-            System.out.println("Anno di pubblicazione: " + campiLibro[4]);
-            System.out.println("Media voti stile: " + campiLibro[5]);
-            System.out.println("Media voti contenuto: " + campiLibro[6]);
-            System.out.println("Media voti gradevolezza: " + campiLibro[7]);
-            System.out.println("Media voti originalità: " + campiLibro[8]);
-            System.out.println("Media voti edizione: " + campiLibro[9]);
-            System.out.println("Media totale voti: " + campiLibro[10]);
-            System.out.println("Numero di utenti che hanno votato: " + campiLibro[11]);
-            System.out.println("Libri consigliati: " + campiLibro[12]);
-            System.out.println("\n"+RESET);
+        private static String getCommentiPerCaratteristica(String titoloLibro, String caratteristica) {
+            List<String> commenti = new ArrayList<>();
+            try (BufferedReader br = new BufferedReader(new FileReader(Main.VALUTAZIONI_FILE_PATH))) {
+                String line;
+                br.readLine(); // Salta l'intestazione
+                while ((line = br.readLine()) != null) {
+                    String[] campi = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Gestisce le virgole all'interno delle virgolette
+                    if (campi[1].equalsIgnoreCase(titoloLibro)) {
+                        switch (caratteristica) {
+                            case "stile":
+                                commenti.add(campi[9]);
+                                break;
+                            case "contenuto":
+                                commenti.add(campi[10]);
+                                break;
+                            case "gradevolezza":
+                                commenti.add(campi[11]);
+                                break;
+                            case "originalita":
+                                commenti.add(campi[12]);
+                                break;
+                            case "edizione":
+                                commenti.add(campi[13]);
+                                break;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // Restituisci un elenco vuoto se non ci sono commenti
+            return commenti.isEmpty() ? "[]" : String.join("; ", commenti);
         }
         
         /**

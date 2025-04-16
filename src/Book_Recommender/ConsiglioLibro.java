@@ -1,6 +1,3 @@
-
-
-
 /**
  * La classe ConsiglioLibro rappresenta un consiglio di libri per un utente.
  * 
@@ -94,6 +91,18 @@ public class ConsiglioLibro {
             }
             record.append("\n");
             bw.write(record.toString()); // Scrive il record nel file
+        }
+    }
+
+    public void printDetails(double nuovaMediaStile, int numUtenti) {
+        System.out.println("Titolo: " + titoloLibro);
+        System.out.println("Nuova media stile: " + nuovaMediaStile);
+        System.out.println("Numero utenti: " + numUtenti);
+    }
+
+    public void updateValues(String[] values) {
+        if (values[0].trim().equalsIgnoreCase(titoloLibro.trim())) {
+            // Aggiorna i valori
         }
     }
 }
