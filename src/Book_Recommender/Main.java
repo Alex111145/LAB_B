@@ -556,7 +556,4 @@ System.out.println("\n" + VERDE + V + "Libreria registrata con successo!" + RESE
     }
 
    
-      
-
-
 }
