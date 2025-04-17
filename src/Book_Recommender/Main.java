@@ -117,7 +117,7 @@ public class Main {
                 }
 
                 if (scelta == 1) {
-                    ricercalibronologin();
+                    Libreria.ricercalibronologin();
                 } else if (scelta == 2) {
                     // Registrazione utente
                     RegistrazioneUtente.registrazione();
@@ -180,95 +180,47 @@ public class Main {
             int sceltaUtente = Integer.parseInt(sceltaInput);
 
             if (sceltaUtente == 1) {
-               // Creazione libreria
-System.out.print("\nInserisci il nome della libreria:\n\n ");
-String nomeLibreria = scanner.nextLine();
-if (nomeLibreria.isEmpty()) {
-    System.out.println("Il nome della libreria non può essere vuoto: (digita 'salva' per salvare la libreria)\n");
-    continue;
-}
-Libreria libreria = new Libreria(nomeLibreria);
+                // Creazione libreria
+                System.out.print("\nInserisci il nome della libreria:\n\n ");
+                String nomeLibreria = scanner.nextLine();
+                if (nomeLibreria.isEmpty()) {
+                    System.out.println("Il nome della libreria non può essere vuoto: (digita 'salva' per salvare la libreria)\n");
+                    continue;
+                }
+                Libreria libreria = new Libreria(nomeLibreria);
 
-// Aggiunta libri alla libreria
-System.out.print("\n" + VERDE + V + "Inserisci i titoli dei libri da aggiungere a '" + nomeLibreria + "' (digita 'salva' per salvare i libri):\n\n" + RESET);
+                // Chiamata al metodo ricercalibrologin2 per aggiungere libri alla libreria
+                RegistrazioneUtente.ricercalibrologin2(userid, libreria);
 
-boolean almenoUnLibroAggiunto = false;
-
-while (true) {
-    String libro = scanner.nextLine().toLowerCase();
-    if (libro.equalsIgnoreCase("salva")) {
-        if (!almenoUnLibroAggiunto) {
-            System.out.println("\n" + ROSSO + X + "Devi aggiungere almeno un libro prima di poter salvare la libreria! Inserisci un titolo:\n" + RESET);
-            continue; // Torna all'inizio del ciclo per richiedere un input valido
-        }
-        break;
-    }
-    if (libro.isEmpty()) {
-        System.out.println(ROSSO + X + "Il titolo del libro non può essere vuoto: (digita 'salva' per salvare la libreria)" + RESET);
-        continue;
-    }
-
-    if (libroEsisteInDataCsv(libro)) {
-        if (libreria.aggiungiLibro(libro)) {
-            almenoUnLibroAggiunto = true; // Segna che almeno un libro è stato aggiunto
-            System.out.println("\n" + VERDE + V + "Libro aggiunto con successo alla libreria '" + nomeLibreria + "'. Inserisci altri titoli per aggiungerli (digita 'salva' per salvare la libreria)! \n" + RESET);
-        } else {
-            System.out.println("\n" + ROSSO + X + libro + " già presente nella libreria, inserisci un altro titolo (digita 'salva' per salvare la libreria)\n" + RESET);
-        }
-    } else {
-        System.out.println("\n" + ROSSO + X + "Non esiste nessun libro con quel titolo nella biblioteca, riprova! (digita 'salva' per salvare i libri)\n" + RESET);
-    }
-}
-
-// Registrazione libreria
-Libreria.registraLibreria(userid, libreria);
-System.out.println("\n" + VERDE + V + "Libreria registrata con successo!" + RESET);
-
-
-
-
-
+                // Salva la libreria
+                Libreria.registraLibreria(userid, libreria);
+                System.out.println("\n" + VERDE + V + "Libreria registrata con successo!" + RESET);
             } else if (sceltaUtente == 2) {
-
+                // Controlla se esistono librerie registrate
                 File file = new File(librerie_path);
                 if (!file.exists()) {
-                    System.out.println("\n"+ROSSO+X+"Non hai librerie registrate, creane una nuova prima di selezionarne una"+RESET);
-                  menuUtenteRegistrato(userid);// Termina l'esecuzione se il file non esiste
+                    System.out.println("\n" + ROSSO + X + "Non hai librerie registrate, creane una nuova prima di selezionarne una." + RESET);
+                    continue;
                 }
 
-                System.out.println("\nSeleziona la libreria dove vuoi aggiungere il libro:\n");
-
+                // Mostra le librerie disponibili e consente di selezionarne una
+                System.out.println("\nSeleziona la libreria dove vuoi aggiungere i libri:\n");
                 String nomeLibreria = Libreria.selezionaLibreria(userid);
                 if (nomeLibreria != null) {
-                    System.out.print("\n"+VERDE+V+"Inserisci il titolo del libro da aggiungere a '" + nomeLibreria + "' (digita 'salva' per salvare i libri):\n\n"+RESET);
+                    System.out.println("\n" + VERDE + V + "Hai selezionato la libreria: '" + nomeLibreria + "'." + RESET);
 
-                    while (true) {
-                        String libro = scanner.nextLine().toLowerCase();
+                    // Crea un'istanza della libreria selezionata
+                    Libreria libreria = new Libreria(nomeLibreria);
 
-                        if (libro.equalsIgnoreCase("salva")) {
-                            System.out.print(VERDE+V+"\nTornando al menu principale...\n");
-                            break;
-                        }
-                        if (Libreria.libroGiaPresenteNellaLibreria(userid, nomeLibreria, libro)) {
-                            System.out.println("\n"+ROSSO + X+ "Il libro "+libro+ " è già presente nella libreria '" + nomeLibreria + "', cambia libro  (digita 'salva' per salvare i libri)" + RESET);
-                            continue;
-                        }
-                        if (libro.isEmpty()) {
-                            System.out.println(ROSSO+X +"Il titolo del libro non può essere vuoto: (digita 'salva' per salvare la libreria)"+RESET);
-                            continue;
-                        }
+                    // Usa il metodo ricercalibrologin2 per aggiungere libri alla libreria selezionata
+                    RegistrazioneUtente.ricercalibrologin2(userid, libreria);
 
-                        if (libroEsisteInDataCsv(libro) && !Libreria.libroGiaPresenteNellaLibreria(userid, nomeLibreria, libro)) {
-                            
-                            Libreria.aggiungiLibroALibreria(userid, nomeLibreria, libro);
-                            System.out.println("\n"+VERDE +V + "Libro aggiunto con successo!\n "+RESET);
-                            menuUtenteRegistrato(userid);
-                        } else {
-                            System.out.println("\n"+ROSSO +X +"Il libro non esiste in biblioteca o è già presente nella libreria, riprova! (digita 'salva' per salvare i libri)\n"+RESET);
-                        }
-                    }
+                    // Salva la libreria aggiornata
+                    Libreria.registraLibreria(userid, libreria);
+                    System.out.println("\n" + VERDE + V + "Libreria aggiornata con successo!" + RESET);
+                } else {
+                    System.out.println("\n" + ROSSO + X + "Nessuna libreria selezionata. Riprova." + RESET);
                 }
-
             } else if (sceltaUtente == 3) {
               
                 String librerieStr = Libreria.visualizzaLibrerieConLibri(userid);
@@ -447,65 +399,7 @@ System.out.println("\n" + VERDE + V + "Libreria registrata con successo!" + RESE
     /**
      * Mostra il menu di ricerca per gli utenti non registrati.
      */
-    public static void ricercalibronologin() {
-        if (!new File(LIBRI_FILE_PATH).exists()) {
-            Libricsv.generaFileLibri();
-        }
-        @SuppressWarnings("resource")
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            System.out.println(VIOLA+"\n\n* Menu di ricerca libri:\n"+RESET);
-            System.out.println("1. Cerca per titolo");
-            System.out.println("2. Cerca per autore");
-            System.out.println("3. Cerca per autore e anno");
-            System.out.println(ROSSO+"4. Esci"+RESET);
-            System.out.print("\nInserisci la tua scelta: ");
-
-       
-
-            int scelta = scanner.nextInt();
-            scanner.nextLine(); // Consuma la newline
-
-            switch (scelta) {
-                case 1:
-                    while (true) {
-                        System.out.print("\nInserisci il titolo da cercare (digita 'back' per tornare indietro): ");
-                        String titolo = scanner.nextLine();
-                        if (titolo.equalsIgnoreCase("back")) {
-                            ricercalibronologin();
-                            break;
-                        } else {
-                            Libreria.cercaLibroPerTitolo(titolo);
-                            ricercalibronologin();
-                        }
-                    }
-                    break;
-                case 2:
-                    while (true) {
-                        System.out.print("\nInserisci l'autore da cercare (digita 'back' per tornare indietro): ");
-                        String autore = scanner.nextLine();
-                        if (autore.equalsIgnoreCase("back")) {
-                            ricercalibronologin();
-                            break;
-                        } else {
-                            Libreria.cercaLibroPerAutore(autore);
-                            ricercalibronologin();
-                        }
-                    }
-                    break;
-                case 3:
-                    Libreria.cercaLibroPerAutoreeanno();
-                    break;
-                case 4:
-                    System.out.println("\n"+ROSSO+"Tornando al menù principale..."+RESET);
-                    menu();
-                    break;
-                default:
-                    System.out.println("\n"+ROSSO+X+"Scelta non valida. Riprova."+RESET);
-            }
-        }
-    }
+  
 
     /**
      * Legge un file CSV e restituisce una lista di array di stringhe rappresentanti i record.
@@ -554,6 +448,8 @@ System.out.println("\n" + VERDE + V + "Libreria registrata con successo!" + RESE
     public static boolean isNumeric(String str) {
         return str != null && str.matches("\\d+");
     }
+
+    
 
    
 }

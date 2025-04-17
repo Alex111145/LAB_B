@@ -622,13 +622,13 @@ public class Libreria {
         
             if (autore.length() < 3) {
                 System.out.println("\n"+ROSSO+X+"L'autore non può essere inferiore a 3 lettere."+RESET);
-                Main.ricercalibronologin(); // Torna al menu utente non registrato
+                ricercalibronologin(); // Torna al menu utente non registrato
                 return;
             }
         
             if (!esisteAutore(autore)) {
                 System.out.println("\n"+ROSSO+X+"Non esiste nessun autore chiamato così in Bibloteca."+RESET);
-                Main.ricercalibronologin(); // Torna al menu utente non registrato
+               ricercalibronologin(); // Torna al menu utente non registrato
                 return;
             }
         
@@ -638,7 +638,7 @@ public class Libreria {
         
             if (!esisteAnnoPerAutore(autore, anno)) {
                 System.out.println("\n"+ROSSO+X+"Non esiste nessun anno associato a quel autore."+RESET);
-                Main.ricercalibronologin(); // Torna al menu utente non registrato
+               ricercalibronologin(); // Torna al menu utente non registrato
                 return;
             }
         
@@ -649,8 +649,9 @@ public class Libreria {
          * Cerca un libro per autore.
          *
          * @param autore Il nome dell'autore.
+         * @return 
          */
-        public static void cercaLibroPerAutore(String autore) {
+        public static String[] cercaLibroPerAutore(String autore) {
             try {
                 // Imposta la codifica dell'output della console su UTF-8
                 System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8.name()));
@@ -659,11 +660,11 @@ public class Libreria {
             }
             if (autore.isEmpty()) {
                 System.out.println("\n"+ROSSO+X+"L'autore non può essere vuoto."+RESET);
-                return;
+                return null;
             }
             if (autore.length() <= 2) {
                 System.out.println("\n"+ROSSO+X+"Nessun libro trovato con quel autore in Bibloteca."+RESET);
-                return;
+                return null;
             }
             List<String[]> libri = leggiFileCsv(Main.LIBRI_FILE_PATH);
             System.out.println("\nRisultati della ricerca per autore \"" + autore + "\":");
@@ -672,6 +673,7 @@ public class Libreria {
                     Libreria.stampaDettagliLibro(datiLibro);
                 }
             }
+            return null;
         }
         
         /**
@@ -777,5 +779,64 @@ public class Libreria {
                 }
             }
             return null;
+        }
+        public static void ricercalibronologin() {
+            if (!new File(Main.LIBRI_FILE_PATH).exists()) {
+                Libricsv.generaFileLibri();
+            }
+            @SuppressWarnings("resource")
+            Scanner scanner = new Scanner(System.in);
+    
+            while (true) {
+                System.out.println(Main.VIOLA+"\n\n* Menu di ricerca libri:\n"+RESET);
+                System.out.println("1. Cerca per titolo");
+                System.out.println("2. Cerca per autore");
+                System.out.println("3. Cerca per autore e anno");
+                System.out.println(ROSSO+"4. Esci"+RESET);
+                System.out.print("\nInserisci la tua scelta: ");
+    
+           
+    
+                int scelta = scanner.nextInt();
+                scanner.nextLine(); // Consuma la newline
+    
+                switch (scelta) {
+                    case 1:
+                        while (true) {
+                            System.out.print("\nInserisci il titolo da cercare (digita 'back' per tornare indietro): ");
+                            String titolo = scanner.nextLine();
+                            if (titolo.equalsIgnoreCase("back")) {
+                                ricercalibronologin();
+                                break;
+                            } else {
+                                Libreria.cercaLibroPerTitolo(titolo);
+                                ricercalibronologin();
+                            }
+                        }
+                        break;
+                    case 2:
+                        while (true) {
+                            System.out.print("\nInserisci l'autore da cercare (digita 'back' per tornare indietro): ");
+                            String autore = scanner.nextLine();
+                            if (autore.equalsIgnoreCase("back")) {
+                                ricercalibronologin();
+                                break;
+                            } else {
+                                Libreria.cercaLibroPerAutore(autore);
+                                ricercalibronologin();
+                            }
+                        }
+                        break;
+                    case 3:
+                        Libreria.cercaLibroPerAutoreeanno();
+                        break;
+                    case 4:
+                        System.out.println("\n"+ROSSO+"Tornando al menù principale..."+RESET);
+                        Main.menu();
+                        break;
+                    default:
+                        System.out.println("\n"+ROSSO+X+"Scelta non valida. Riprova."+RESET);
+                }
+            }
         }
     }

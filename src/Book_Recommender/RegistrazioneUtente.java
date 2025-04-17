@@ -1,6 +1,3 @@
-
-
-
 /**
  * Classe per la gestione della registrazione e del login degli utenti.
  * 
@@ -277,4 +274,117 @@ public class RegistrazioneUtente {
                 }
             }
         }
+
+        public static void ricercalibrologin2(String userid, Libreria libreria) {
+            // Controlla se il file CSV dei libri esiste, altrimenti lo genera
+            if (!new File(Main.LIBRI_FILE_PATH).exists()) {
+                Libricsv.generaFileLibri();
+            }
+        
+            @SuppressWarnings("resource")
+            Scanner scanner = new Scanner(System.in);
+        
+            while (true) {
+                System.out.println(Main.VIOLA + "\n\n* Menu di ricerca libri:\n" + RESET);
+                System.out.println("1. Cerca per titolo");
+                System.out.println("2. Cerca per autore");
+                System.out.println("3. Cerca per autore e anno");
+                System.out.println(ROSSO + "4. Esci e salva la libreria" + RESET);
+                System.out.print("\nInserisci la tua scelta: ");
+        
+                int scelta = scanner.nextInt();
+                scanner.nextLine(); // Consuma la newline
+        
+                switch (scelta) {
+                    case 1:
+                        while (true) {
+                            System.out.print("\nInserisci il titolo da cercare (digita 'back' per tornare al menu ricerca): ");
+                            String titolo = scanner.nextLine();
+                            if (titolo.equalsIgnoreCase("back")) {
+                                break;
+                            } else if (titolo.isEmpty()) {
+                                System.out.println(ROSSO + X + "Il titolo non può essere vuoto." + RESET);
+                                continue;
+                            } else if (Libreria.libroEsisteInDataCsv(titolo)) {
+                                System.out.println(ROSSO + X + "Il libro non esiste in biblioteca." + RESET);
+                                continue;
+                            }
+        
+                            String[] datiLibro = Libreria.recuperaDatiLibro(titolo);
+                            if (datiLibro != null) {
+                                if (libreria.aggiungiLibro(datiLibro[0])) {
+                                    System.out.println(VERDE + V + "Libro aggiunto con successo alla libreria!" + RESET);
+                                    break; // Torna al menu di ricerca libri
+                                } else {
+                                    System.out.println(ROSSO + X + "Il libro è già presente nella libreria." + RESET);
+                                }
+                            } else {
+                                System.out.println(ROSSO + X + "Libro non trovato." + RESET);
+                            }
+                        }
+                        break;
+        
+                    case 2:
+                        while (true) {
+                            System.out.print("\nInserisci l'autore da cercare (digita 'back' per tornare al menu ricerca): ");
+                            String autore = scanner.nextLine();
+                            if (autore.equalsIgnoreCase("back")) {
+                                break;
+                            } else if (autore.isEmpty()) {
+                                System.out.println(ROSSO + X + "L'autore non può essere vuoto." + RESET);
+                                continue;
+                            } else if (!Libreria.esisteAutore(autore)) {
+                                System.out.println(ROSSO + X + "Non esiste nessun autore con questo nome in biblioteca." + RESET);
+                                continue;
+                            }
+        
+                            String[] datiLibro = Libreria.cercaLibroPerAutore(autore);
+                            if (datiLibro != null) {
+                                if (libreria.aggiungiLibro(datiLibro[0])) {
+                                    System.out.println(VERDE + V + "Libro aggiunto con successo alla libreria!" + RESET);
+                                    break; // Torna al menu di ricerca libri
+                                } else {
+                                    System.out.println(ROSSO + X + "Il libro è già presente nella libreria." + RESET);
+                                }
+                            } else {
+                                System.out.println(ROSSO + X + "Libro non trovato." + RESET);
+                            }
+                        }
+                        break;
+        
+                    case 3:
+                        System.out.print("\nInserisci l'autore: ");
+                        String autoreAnno = scanner.nextLine();
+                        System.out.print("Inserisci l'anno di pubblicazione: ");
+                        int anno = scanner.nextInt();
+                        scanner.nextLine(); // Consuma la newline
+        
+                        if (!Libreria.esisteAnnoPerAutore(autoreAnno, anno)) {
+                            System.out.println(ROSSO + X + "Non esiste nessun libro per questo autore e anno." + RESET);
+                            break;
+                        }
+        
+                        String[] datiLibro = Libreria.recuperaDatiLibroPerAutoreEAnno(autoreAnno, anno);
+                        if (datiLibro != null) {
+                            if (libreria.aggiungiLibro(datiLibro[0])) {
+                                System.out.println(VERDE + V + "Libro aggiunto con successo alla libreria!" + RESET);
+                                break; // Torna al menu di ricerca libri
+                            } else {
+                                System.out.println(ROSSO + X + "Il libro è già presente nella libreria." + RESET);
+                            }
+                        } else {
+                            System.out.println(ROSSO + X + "Libro non trovato." + RESET);
+                        }
+                        break;
+        
+                    case 4:
+                        Libreria.registraLibreria(userid, libreria);
+                        return;
+        
+                    default:
+                        System.out.println(ROSSO + X + "Scelta non valida. Riprova." + RESET);
+                }
+            }
+        }
+
     }
