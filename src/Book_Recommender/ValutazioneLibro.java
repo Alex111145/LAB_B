@@ -38,43 +38,34 @@ public class ValutazioneLibro {
         // Input delle valutazioni
         System.out.print("\n1. Inserisci la valutazione per lo stile (da 1 a 5): ");
         int stile = inputValutazione(scanner);
-        System.out.print("Inserisci un commento per lo stile: ");
-        String commentoStile = scanner.nextLine();
+        System.out.print("Inserisci un commento per lo stile (max 256 caratteri): ");
+        String commentoStile = inputCommento(scanner);
 
         System.out.print("\n2. Inserisci la valutazione per il contenuto (da 1 a 5): ");
         int contenuto = inputValutazione(scanner);
-        System.out.print("Inserisci un commento per il contenuto: ");
-        String commentoContenuto = scanner.nextLine();
+        System.out.print("Inserisci un commento per il contenuto (max 256 caratteri): ");
+        String commentoContenuto = inputCommento(scanner);
 
         System.out.print("\n3. Inserisci la valutazione per la gradevolezza (da 1 a 5): ");
         int gradevolezza = inputValutazione(scanner);
-        System.out.print("Inserisci un commento per la gradevolezza: ");
-        String commentoGradevolezza = scanner.nextLine();
+        System.out.print("Inserisci un commento per la gradevolezza (max 256 caratteri): ");
+        String commentoGradevolezza = inputCommento(scanner);
 
         System.out.print("\n4. Inserisci la valutazione per l'originalità (da 1 a 5): ");
         int originalita = inputValutazione(scanner);
-        System.out.print("Inserisci un commento per l'originalità: ");
-        String commentoOriginalita = scanner.nextLine();
+        System.out.print("Inserisci un commento per l'originalità (max 256 caratteri): ");
+        String commentoOriginalita = inputCommento(scanner);
 
         System.out.print("\n5. Inserisci la valutazione per l'edizione (da 1 a 5): ");
         int edizione = inputValutazione(scanner);
-        System.out.print("Inserisci un commento per l'edizione: ");
-        String commentoEdizione = scanner.nextLine();
+        System.out.print("Inserisci un commento per l'edizione (max 256 caratteri): ");
+        String commentoEdizione = inputCommento(scanner);
         
         double media = (stile + contenuto + gradevolezza + originalita + edizione) / 5.0;
         System.out.println("\nLa media dei tuoi voti è: " + media);
 
-        System.out.print("\n6. Inserisci un commento finale: ");
-        String recensione = scanner.nextLine();
-        // Controllo che la recensione non contenga numeri
-while (recensione.matches(".*\\d.*")) {
-    System.out.println("\n"+ROSSO+X+"Errore: la recensione non deve contenere numeri. Riprova."+RESET);
-    System.out.print("\n6. Inserisci la recensione: ");
-    recensione = scanner.nextLine();
-}
-
-        // Calcolo della media delle valutazioni
-      
+        System.out.print("\n6. Inserisci un commento finale (max 256 caratteri): ");
+        String recensione = inputCommento(scanner);
 
         // Scrivi nel file CSV delle valutazioni
         scriviValutazioneCsv(userid, titoloLibro, stile, contenuto, gradevolezza, originalita, edizione, media, recensione,
@@ -94,15 +85,9 @@ while (recensione.matches(".*\\d.*")) {
      * @return La valutazione inserita dall'utente (compresa tra 1 e 5).
      */
     public static int inputValutazione(Scanner scanner) {
-                       try {
-            // Imposta la codifica dell'output della console su UTF-8
-            System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8.name()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         while (true) {
             if (!scanner.hasNextInt()) {
-                System.out.println(ROSSO+X+"Inserisci un numero valido."+RESET);
+                System.out.println(ROSSO + X + "Inserisci un numero tra 1 e 5." + RESET);
                 scanner.next(); // Consuma l'input non valido
                 continue;
             }
@@ -110,10 +95,27 @@ while (recensione.matches(".*\\d.*")) {
             int valutazione = scanner.nextInt();
             scanner.nextLine(); // Consuma la newline
             if (valutazione < 1 || valutazione > 5) {
-                System.out.println(ROSSO+X+"Valutazione non valida. Inserisci un numero tra 1 e 5."+RESET);
+                System.out.println(ROSSO + X + "Valutazione non valida. Inserisci un numero tra 1 e 5." + RESET);
                 continue;
             }
             return valutazione;
+        }
+    }
+
+    /**
+     * Metodo per l'input del commento da parte dell'utente.
+     *
+     * @param scanner Lo scanner per la lettura dell'input dell'utente.
+     * @return Il commento inserito dall'utente (max 256 caratteri).
+     */
+    public static String inputCommento(Scanner scanner) {
+        while (true) {
+            String commento = scanner.nextLine();
+            if (commento.length() > 256) {
+                System.out.println(ROSSO + X + "Il commento non può superare i 256 caratteri. Riprova." + RESET);
+            } else {
+                return commento;
+            }
         }
     }
 

@@ -553,6 +553,7 @@ public class Libreria {
             System.out.println("Libri consigliati: " + datiLibro[12]);
             System.out.println("Commento generale: " + getCommentoGenerale(datiLibro[0]));
             System.out.println("\n" + RESET);
+       
         }
         
         private static String getCommentiPerCaratteristica(String titoloLibro, String caratteristica) {
@@ -788,14 +789,12 @@ public class Libreria {
             Scanner scanner = new Scanner(System.in);
     
             while (true) {
-                System.out.println(Main.VIOLA+"\n\n* Menu di ricerca libri:\n"+RESET);
+                System.out.println(Main.VIOLA + "\n\n* Menu di ricerca libri:\n" + Main.RESET);
                 System.out.println("1. Cerca per titolo");
                 System.out.println("2. Cerca per autore");
                 System.out.println("3. Cerca per autore e anno");
-                System.out.println(ROSSO+"4. Esci"+RESET);
+                System.out.println(Main.ROSSO + "4. Torna al menu principale" + Main.RESET);
                 System.out.print("\nInserisci la tua scelta: ");
-    
-           
     
                 int scelta = scanner.nextInt();
                 scanner.nextLine(); // Consuma la newline
@@ -803,39 +802,33 @@ public class Libreria {
                 switch (scelta) {
                     case 1:
                         while (true) {
-                            System.out.print("\nInserisci il titolo da cercare (digita 'back' per tornare indietro): ");
+                            System.out.print("\nInserisci il titolo da cercare (digita 'back' per tornare al menu ricerca): ");
                             String titolo = scanner.nextLine();
                             if (titolo.equalsIgnoreCase("back")) {
-                                ricercalibronologin();
                                 break;
-                            } else {
-                                Libreria.cercaLibroPerTitolo(titolo);
-                                ricercalibronologin();
                             }
+                            Libreria.cercaLibroPerTitolo(titolo);
                         }
                         break;
                     case 2:
                         while (true) {
-                            System.out.print("\nInserisci l'autore da cercare (digita 'back' per tornare indietro): ");
+                            System.out.print("\nInserisci l'autore da cercare (digita 'back' per tornare al menu ricerca): ");
                             String autore = scanner.nextLine();
                             if (autore.equalsIgnoreCase("back")) {
-                                ricercalibronologin();
                                 break;
-                            } else {
-                                Libreria.cercaLibroPerAutore(autore);
-                                ricercalibronologin();
                             }
+                            Libreria.cercaLibroPerAutore(autore);
                         }
                         break;
                     case 3:
                         Libreria.cercaLibroPerAutoreeanno();
                         break;
                     case 4:
-                        System.out.println("\n"+ROSSO+"Tornando al menù principale..."+RESET);
+                        System.out.println("\n" + Main.ROSSO + "Tornando al menù principale..." + Main.RESET);
                         Main.menu();
-                        break;
+                        return; // Torna al menu principale
                     default:
-                        System.out.println("\n"+ROSSO+X+"Scelta non valida. Riprova."+RESET);
+                        System.out.println("\n" + Main.ROSSO + Main.X + "Scelta non valida. Riprova." + Main.RESET);
                 }
             }
         }
