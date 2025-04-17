@@ -694,7 +694,7 @@ public class Libreria {
                 return;
             }
             if (titolo.length() <= 2) {
-                System.out.println("\n"+ROSSO+X+"Nessun libro trovato con quel titolo in Bibloteca.");
+                System.out.println("\n"+ROSSO+X+"Nessun libro trovato con quel titolo in Bibloteca."+ RESET);
                 return;
             }
             Libreria.stampaDettagliLibro(recuperaDatiLibro(titolo));
@@ -796,8 +796,15 @@ public class Libreria {
                 System.out.println(Main.ROSSO + "4. Torna al menu principale" + Main.RESET);
                 System.out.print("\nInserisci la tua scelta: ");
     
-                int scelta = scanner.nextInt();
-                scanner.nextLine(); // Consuma la newline
+                int scelta;
+                try {
+                    scelta = scanner.nextInt();
+                    scanner.nextLine(); // Consuma la newline
+                } catch (InputMismatchException e) {
+                    System.out.println("\n" + Main.ROSSO + Main.X + "Inserisci un numero valido. Riprova." + Main.RESET);
+                    scanner.nextLine(); // Consuma l'input non valido
+                    continue;
+                }
     
                 switch (scelta) {
                     case 1:
@@ -825,8 +832,8 @@ public class Libreria {
                         break;
                     case 4:
                         System.out.println("\n" + Main.ROSSO + "Tornando al menù principale..." + Main.RESET);
-                        Main.menu();
-                        return; // Torna al menu principale
+                        Main.menu(); // Torna al menu principale
+                        return; // Esci dal metodo
                     default:
                         System.out.println("\n" + Main.ROSSO + Main.X + "Scelta non valida. Riprova." + Main.RESET);
                 }

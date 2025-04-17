@@ -144,9 +144,7 @@ public class Main {
                     break;
                 }
             } catch (NoSuchElementException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                System.out.println("\n\n"+ROSSO+"Chiusura Programma ...\n"+RESET);
-                System.exit(0);
-        
+                menu();
             }
         }
         scanner.close();
