@@ -555,83 +555,8 @@ System.out.println("\n" + VERDE + V + "Libreria registrata con successo!" + RESE
         return str != null && str.matches("\\d+");
     }
 
-    private static String getCommentiPerCaratteristica(String titoloLibro, String caratteristica) {
-        List<String> commenti = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(Main.VALUTAZIONI_FILE_PATH))) {
-            String line;
-            br.readLine(); // Salta l'intestazione
-            while ((line = br.readLine()) != null) {
-                String[] campi = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Gestisce le virgole all'interno delle virgolette
-                if (campi[1].equalsIgnoreCase(titoloLibro)) {
-                    switch (caratteristica) {
-                        case "stile":
-                            commenti.add(campi[9]);
-                            break;
-                        case "contenuto":
-                            commenti.add(campi[10]);
-                            break;
-                        case "gradevolezza":
-                            commenti.add(campi[11]);
-                            break;
-                        case "originalita":
-                            commenti.add(campi[12]);
-                            break;
-                        case "edizione":
-                            commenti.add(campi[13]);
-                            break;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Restituisci "momentaneamente nessun commento" se non ci sono commenti
-        return commenti.isEmpty() ? "momentaneamente nessun commento" : String.join("; ", commenti);
-    }
+   
+      
 
-    private static String getCommentoGenerale(String titoloLibro) {
-        List<String> commentiGenerali = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(Main.VALUTAZIONI_FILE_PATH))) {
-            String line;
-            br.readLine(); // Salta l'intestazione
-            while ((line = br.readLine()) != null) {
-                String[] campi = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Gestisce le virgole all'interno delle virgolette
-                if (campi[1].equalsIgnoreCase(titoloLibro)) {
-                    commentiGenerali.add(campi[8]); // Il campo 8 contiene il commento generale
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Restituisci "momentaneamente nessun commento generale" se non ci sono commenti generali
-        return commentiGenerali.isEmpty() ? "momentaneamente nessun commento generale" : String.join("; ", commentiGenerali);
-    }
 
-    public static void stampaDettagliLibro(String[] datiLibro) {
-        if (datiLibro == null) {
-            System.out.println("\n" + ROSSO + X + "Nessun libro trovato." + RESET);
-            return;
-        }
-    
-        System.out.println(VERDE + "\nTitolo: " + datiLibro[0]);
-        System.out.println("Autori: " + datiLibro[1]);
-        System.out.println("Categoria: " + datiLibro[2]);
-        System.out.println("Editore: " + datiLibro[3]);
-        System.out.println("Anno di pubblicazione: " + datiLibro[4]);
-        System.out.println("Media voti stile: " + datiLibro[5]);
-        System.out.println("Commenti stile: " + getCommentiPerCaratteristica(datiLibro[0], "stile"));
-        System.out.println("Media voti contenuto: " + datiLibro[6]);
-        System.out.println("Commenti contenuto: " + getCommentiPerCaratteristica(datiLibro[0], "contenuto"));
-        System.out.println("Media voti gradevolezza: " + datiLibro[7]);
-        System.out.println("Commenti gradevolezza: " + getCommentiPerCaratteristica(datiLibro[0], "gradevolezza"));
-        System.out.println("Media voti originalità: " + datiLibro[8]);
-        System.out.println("Commenti originalità: " + getCommentiPerCaratteristica(datiLibro[0], "originalita"));
-        System.out.println("Media voti edizione: " + datiLibro[9]);
-        System.out.println("Commenti edizione: " + getCommentiPerCaratteristica(datiLibro[0], "edizione"));
-        System.out.println("Media totale voti: " + datiLibro[10]);
-        System.out.println("Numero di utenti che hanno votato: " + datiLibro[11]);
-        System.out.println("Libri consigliati: " + datiLibro[12]);
-        System.out.println("Commenti generali: " + getCommentoGenerale(datiLibro[0]));
-        System.out.println("\n" + RESET);
-    }
 }

@@ -551,6 +551,7 @@ public class Libreria {
             System.out.println("Media totale voti: " + datiLibro[10]);
             System.out.println("Numero di utenti che hanno votato: " + datiLibro[11]);
             System.out.println("Libri consigliati: " + datiLibro[12]);
+            System.out.println("Commento generale: " + getCommentoGenerale(datiLibro[0]));
             System.out.println("\n" + RESET);
         }
         
@@ -584,8 +585,24 @@ public class Libreria {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            // Restituisci un elenco vuoto se non ci sono commenti
-            return commenti.isEmpty() ? "[]" : String.join("; ", commenti);
+            return commenti.isEmpty() ? "nessun commento presente" : String.join("; ", commenti);
+        }
+        
+        private static String getCommentoGenerale(String titoloLibro) {
+            List<String> commentiGenerali = new ArrayList<>();
+            try (BufferedReader br = new BufferedReader(new FileReader(Main.VALUTAZIONI_FILE_PATH))) {
+                String line;
+                br.readLine(); // Salta l'intestazione
+                while ((line = br.readLine()) != null) {
+                    String[] campi = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Gestisce le virgole all'interno delle virgolette
+                    if (campi[1].equalsIgnoreCase(titoloLibro)) {
+                        commentiGenerali.add(campi[8]); // Il campo 8 contiene il commento generale
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return commentiGenerali.isEmpty() ? "nessun commento generale presente" : String.join("; ", commentiGenerali);
         }
         
         /**
